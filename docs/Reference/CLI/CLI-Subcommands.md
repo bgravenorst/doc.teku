@@ -62,7 +62,7 @@ are written to the `./config/peer-ids.dat` file.
 
 ## validator
 
-Register or generate validators and send transactions to an Ethereum 1.0 node.
+Register or generate validators, and send transactions to an Ethereum 1.0 node.
 
 ### generate
 
@@ -91,11 +91,14 @@ teku validator generate --encrypted-keystore-enabled=<BOOLEAN>
 teku validator generate --encrypted-keystore-enabled=false
 ```
 
-Specify whether to create encrypted V3 keystore validator and withdrawal keys.
+Specify whether to create encrypted BLS12-381 keystore validator and withdrawal keys.
 Defaults to `true`.
 
-Use [`teku validator generate --keys-output-path`](#keys-output-path) to specify the
-location of the encrypted or unencrypted keys.
+Use [`--keys-output-path`](#keys-output-path) to specify the output location of
+the encrypted or unencrypted keys.
+
+!!! important
+    Unencrypted keys are displayed on the console if the output location is not specified.
 
 #### eth1-deposit-contract-address
 
@@ -132,9 +135,9 @@ teku validator generate --eth1-keystore-file=/home/me/me_node/keystore
 ```
 
 Path to the encrypted V3 keystore file containing the Ethereum 1.0 private key used to
-send the deposit transaction.
+sign the deposit transaction.
 
-Cannot be used with `teku validator generate --eth1-private-key`
+Cannot be used with `--eth1-private-key`
 
 #### eth1-keystore-password-file
 
@@ -171,15 +174,16 @@ teku validator generate --keys-output-path=<FILE|DIR>
 teku validator generate --keys-output-path=/home/me/me_node/keys
 ```
 
-Specify the output location for validator and withdrawal keys.
+Specify the output location for validator and withdrawal keys. If not set, unencrypted
+keys are written to standard out, and encrypted BLS12-381 keystores are created in current directory.
 
-* Path to the output file when using unencrypted keys. That is, [`teku validator generate --encrypted-keystore-enabled`](#encrypted-keystore-enabled)
+Use this option to specify:
+
+* The path to the output file when using unencrypted keys. That is, [`--encrypted-keystore-enabled`](#encrypted-keystore-enabled)
 set to `false`.
+* The path to the output directory for the auto-generated keystore files. That is,
+[`encrypted-keystore-enabled`](#encrypted-keystore-enabled) set to `true`.
 
-* Path to the output directory for the auto-generated V3 keystore files. That is,
-[`teku validator generate --encrypted-keystore-enabled`](#encrypted-keystore-enabled) set to `true`.
-
-If not set, unencrypted keys are written to standard out, and encrypted keystores are created in current directory.
 
 #### encrypted-keystore-validator-password-env
 
@@ -191,7 +195,10 @@ teku validator generate --encrypted-keystore-validator-password-env=<ENV>
 teku validator generate --encrypted-keystore-validator-password-env=VALIDATOR_PASSWORD
 ```
 
-The environment variable that stores the password to decrypt the validator's V3 keystore.
+The environment variable that stores the password to decrypt the validator's BLS12-381 keystore.
+
+If you do not specify a password, then you need to manually enter a password at
+the command line when prompted.
 
 #### encrypted-keystore-validator-password-file
 
@@ -203,7 +210,10 @@ teku validator generate --encrypted-keystore-validator-password-file=<FILE>
 teku validator generate --encrypted-keystore-validator-password-file=/home/me/me_node/password
 ```
 
-The file that stores the password to decrypt the validator's V3 keystore.
+The file that stores the password to decrypt the validator's BLS12-381 keystore.
+
+If you do not specify a password, then you need to manually enter a password at
+the command line when prompted.
 
 #### encrypted-keystore-withdrawal-password-env
 
@@ -217,6 +227,9 @@ teku validator generate --encrypted-keystore-withdrawal-password-env=WITHDRAWAL_
 
 The environment variable that stores the password to decrypt the validator's withdrawal key.
 
+If you do not specify a password, then you need to manually enter a password at
+the command line when prompted.
+
 #### encrypted-keystore-withdrawal-password-file
 
 ```bash tab="Syntax"
@@ -228,6 +241,9 @@ teku validator generate --encrypted-keystore-withdrawal-password-file=/home/me/m
 ```
 
 The file that stores the password to decrypt the validator's withdrawal key.
+
+If you do not specify a password, then you need to manually enter a password at
+the command line when prompted.
 
 ### register
 
@@ -256,7 +272,7 @@ teku validator register --encrypted-keystore-validator-file=<FILE>
 teku validator register --encrypted-keystore-validator-file=/home/me/me_node/password
 ```
 
-Path to the V3 keystore file containing the validator's encrypted private key.
+Path to the BLS12-381 keystore file containing the validator's encrypted private key.
 
 #### encrypted-keystore-validator-password-env
 
@@ -268,7 +284,7 @@ teku validator register --encrypted-keystore-validator-password-env=<ENV>
 teku validator register --encrypted-keystore-validator-password-env=VALIDATOR_PASSWORD
 ```
 
-The environment variable that stores the password to decrypt the validator's V3 keystore.
+The environment variable that stores the password to decrypt the validator's BLS12-381 keystore.
 
 #### encrypted-keystore-validator-password-file
 
@@ -280,7 +296,7 @@ teku validator register --encrypted-keystore-validator-password-file=<FILE>
 teku validator register --encrypted-keystore-validator-password-file=/home/me/me_node/password
 ```
 
-The file that stores the password to decrypt the validator's V3 keystore.
+The file that stores the password to decrypt the validator's BLS12-381 keystore.
 
 #### eth1-deposit-contract-address
 
@@ -317,7 +333,7 @@ teku validator register --eth1-keystore-file=/home/me/me_node/keystore
 ```
 
 Path to the encrypted V3 keystore file containing the Ethereum 1.0 private key used to
-send the deposit transaction.
+sign the deposit transaction.
 
 Cannot be used with `teku validator register --eth1-private-key`
 
